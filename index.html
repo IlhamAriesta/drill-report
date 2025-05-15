@@ -1,184 +1,378 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Report Drilling Activity</title>
-  <style>
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background: #f0f2f5;
-      padding: 20px;
-    }
-    h1 {
-      text-align: center;
-    }
-    .menu-buttons {
-      text-align: center;
-      margin-bottom: 20px;
-    }
-    .menu-buttons button {
-      margin: 5px;
-      padding: 12px 18px;
-      background-color: #3498db;
-      border: none;
-      color: white;
-      border-radius: 6px;
-      cursor: pointer;
-      font-weight: bold;
-    }
-    .menu-buttons button:hover {
-      background-color: #2c80b4;
-    }
-    section {
-      display: none;
-      background: white;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-      max-width: 600px;
-      margin: 0 auto 30px;
-    }
-    label {
-      display: block;
-      margin-top: 15px;
-      font-weight: 600;
-    }
-    input, textarea {
-      width: 100%;
-      padding: 10px;
-      margin-top: 5px;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      font-size: 1rem;
-    }
-    .time-btn, .output-btn {
-      margin-top: 10px;
-      padding: 10px 15px;
-      background-color: #27ae60;
-      border: none;
-      color: white;
-      border-radius: 6px;
-      cursor: pointer;
-      font-weight: bold;
-    }
-    .time-display {
-      font-weight: bold;
-      margin-left: 10px;
-      color: #27ae60;
-    }
-    .output-box {
-      background-color: #f9f9f9;
-      border: 1px dashed #ccc;
-      padding: 15px;
-      margin-top: 20px;
-      white-space: pre-wrap;
-      font-family: monospace;
-      font-size: 0.95rem;
-      border-radius: 6px;
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Report Drilling Activity</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: #f4f7fa;
+    margin: 0; padding: 20px;
+    color: #333;
+  }
+  h1 {
+    text-align: center;
+    color: #2c3e50;
+    margin-bottom: 20px;
+  }
+  nav {
+    text-align: center;
+    margin-bottom: 25px;
+  }
+  nav button {
+    background: #2980b9;
+    border: none;
+    color: white;
+    font-weight: 600;
+    padding: 12px 24px;
+    margin: 0 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  nav button:hover, nav button.active {
+    background: #1f6391;
+  }
+  section {
+    background: white;
+    max-width: 720px;
+    margin: 0 auto 30px;
+    padding: 20px 25px;
+    border-radius: 10px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    display: none;
+  }
+  section.active {
+    display: block;
+  }
+  h2 {
+    margin-top: 0;
+    color: #34495e;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  label, legend {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 600;
+  }
+  select, input[type="text"], textarea {
+    width: 100%;
+    padding: 10px 14px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 1rem;
+    resize: vertical;
+    transition: border-color 0.2s ease;
+    margin-bottom: 10px;
+  }
+  select:focus, input[type="text"]:focus, textarea:focus {
+    outline: none;
+    border-color: #2980b9;
+    box-shadow: 0 0 5px rgba(41,128,185,0.3);
+  }
+  button.time-btn {
+    margin-top: 10px;
+    padding: 10px 20px;
+    background: #2980b9;
+    border: none;
+    border-radius: 6px;
+    color: white;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  button.time-btn:hover {
+    background: #1f6391;
+  }
+  .time-display {
+    margin-left: 15px;
+    font-weight: 700;
+    color: #27ae60;
+    font-family: monospace;
+    font-size: 1rem;
+  }
+  #output {
+    max-width: 720px;
+    margin: 0 auto;
+    background: white;
+    padding: 20px 25px;
+    border-radius: 10px;
+    box-shadow: 0 3px 15px rgba(0,0,0,0.1);
+    white-space: pre-wrap;
+    font-family: 'Courier New', Courier, monospace;
+    color: #2c3e50;
+    font-size: 1rem;
+    user-select: text;
+  }
+  fieldset {
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    padding: 10px 15px;
+    margin-bottom: 10px;
+  }
+  fieldset legend {
+    font-weight: 700;
+  }
+  fieldset label {
+    display: inline-block;
+    margin-right: 15px;
+    font-weight: 400;
+    cursor: pointer;
+  }
+</style>
 </head>
 <body>
 
 <h1>REPORT DRILLING ACTIVITY</h1>
 
-<div class="menu-buttons">
-  <button onclick="showSection('kondisi')">KONDISI LOKASI</button>
-  <button onclick="showSection('prepare')">PREPARE LOKASI</button>
-  <button onclick="showSection('bor')">PROSES BOR</button>
-</div>
+<nav>
+  <button id="navFree" class="active">Free</button>
+  <button id="navPrepare">Prepare</button>
+  <button id="navBor">Proses Bor</button>
+</nav>
 
-<!-- Section KONDISI -->
-<section id="kondisi">
-  <h2>1. KONDISI LOKASI</h2>
-  <label>Nama Lokasi:</label>
-  <input type="text" id="lokasiKondisi">
-  <button class="time-btn" onclick="setTime('timeFree')">MULAI FREE</button>
-  <span class="time-display" id="timeFree"></span>
-  <label>REMARK:</label>
-  <textarea id="remarkKondisi" rows="3"></textarea>
-  <button class="output-btn" onclick="generateOutput('kondisi')">Tampilkan Output</button>
-  <div class="output-box" id="outputKondisi"></div>
-</section>
+<form id="drillForm" autocomplete="off">
 
-<!-- Section PREPARE -->
-<section id="prepare">
-  <h2>2. PREPARE LOKASI</h2>
-  <label>Nama Lokasi:</label>
-  <input type="text" id="lokasiPrepare">
-  <button class="time-btn" onclick="setTime('timePrepare')">MULAI PREPARE</button>
-  <span class="time-display" id="timePrepare"></span>
-  <label>REMARK:</label>
-  <textarea id="remarkPrepare" rows="3"></textarea>
-  <button class="output-btn" onclick="generateOutput('prepare')">Tampilkan Output</button>
-  <div class="output-box" id="outputPrepare"></div>
-</section>
+  <!-- FREE -->
+  <section id="sectionFree" class="active">
+    <h2>Mulai Free</h2>
+    <label for="pitFree">Pit:</label>
+    <select id="pitFree">
+      <option value="">-- Pilih Pit --</option>
+      <option value="TEMPUDO 2">TEMPUDO 2</option>
+      <option value="TEMPUDO 3">TEMPUDO 3</option>
+      <option value="TEMPUDO 4">TEMPUDO 4</option>
+    </select>
 
-<!-- Section BOR -->
-<section id="bor">
-  <h2>3. PROSES BOR</h2>
-  <label>Nama Lokasi:</label>
-  <input type="text" id="lokasiBor">
-  <button class="time-btn" onclick="setTime('timeBor')">MULAI BOR</button>
-  <span class="time-display" id="timeBor"></span>
-  <label>REMARK:</label>
-  <textarea id="remarkBor" rows="3"></textarea>
-  <button class="output-btn" onclick="generateOutput('bor')">Tampilkan Output</button>
-  <div class="output-box" id="outputBor"></div>
-</section>
+    <label for="lokasiFree">Lokasi:</label>
+    <input type="text" id="lokasiFree" placeholder="Masukkan lokasi..." />
+
+    <button type="button" class="time-btn" id="btnFree">Mulai Free</button>
+    <span id="timeFree" class="time-display">[BELUM MULAI]</span>
+
+    <label for="remarkFree" style="margin-top:15px;">Remark:</label>
+    <textarea id="remarkFree" rows="3" placeholder="Isi jika perlu..."></textarea>
+
+    <button type="submit" style="margin-top:20px;">Submit Free</button>
+  </section>
+
+  <!-- PREPARE -->
+  <section id="sectionPrepare">
+    <h2>Mulai Prepare</h2>
+    <label for="pitPrepare">Pit:</label>
+    <select id="pitPrepare">
+      <option value="">-- Pilih Pit --</option>
+      <option value="TEMPUDO 2">TEMPUDO 2</option>
+      <option value="TEMPUDO 3">TEMPUDO 3</option>
+      <option value="TEMPUDO 4">TEMPUDO 4</option>
+    </select>
+
+    <label for="lokasiPrepare">Lokasi:</label>
+    <input type="text" id="lokasiPrepare" placeholder="Masukkan lokasi..." />
+
+    <button type="button" class="time-btn" id="btnPrepare">Mulai Prepare</button>
+    <span id="timePrepare" class="time-display">[BELUM MULAI]</span>
+
+    <label for="remarkPrepare" style="margin-top:15px;">Remark:</label>
+    <textarea id="remarkPrepare" rows="3" placeholder="Isi jika perlu..."></textarea>
+
+    <button type="submit" style="margin-top:20px;">Submit Prepare</button>
+  </section>
+
+  <!-- BOR -->
+  <section id="sectionBor">
+    <h2>Proses Bor</h2>
+
+    <label for="pitBor">Pit:</label>
+    <input type="text" id="pitBor" placeholder="Masukkan Pit..." />
+
+    <label for="lokasiBor">Lokasi:</label>
+    <input type="text" id="lokasiBor" placeholder="Masukkan Lokasi..." />
+
+    <label for="shiftBor">Shift:</label>
+    <input type="text" id="shiftBor" placeholder="Masukkan Shift..." />
+
+    <fieldset>
+      <legend>Tanggul lokasi:</legend>
+      <label><input type="radio" name="tanggulLokasi" value="ADA" /> ADA</label>
+      <label><input type="radio" name="tanggulLokasi" value="TIDAK ADA" /> TIDAK ADA</label>
+    </fieldset>
+
+    <fieldset>
+      <legend>Safety line:</legend>
+      <label><input type="radio" name="safetyLine" value="ADA" /> ADA</label>
+      <label><input type="radio" name="safetyLine" value="TIDAK ADA" /> TIDAK ADA</label>
+    </fieldset>
+
+    <fieldset>
+      <legend>Area parkir:</legend>
+      <label><input type="radio" name="areaParkir" value="ADA" /> ADA</label>
+      <label><input type="radio" name="areaParkir" value="TIDAK ADA" /> TIDAK ADA</label>
+    </fieldset>
+
+    <fieldset>
+      <legend>Rambu lokasi:</legend>
+      <label><input type="radio" name="rambuLokasi" value="ADA" /> ADA</label>
+      <label><input type="radio" name="rambuLokasi" value="TIDAK ADA" /> TIDAK ADA</label>
+    </fieldset>
+
+    <fieldset>
+      <legend>Rambu parkir:</legend>
+      <label><input type="radio" name="rambuParkir" value="ADA" /> ADA</label>
+      <label><input type="radio" name="rambuParkir" value="TIDAK ADA" /> TIDAK ADA</label>
+    </fieldset>
+
+    <fieldset>
+      <legend>Jalan masuk:</legend>
+      <label><input type="radio" name="jalanMasuk" value="ADA" /> ADA</label>
+      <label><input type="radio" name="jalanMasuk" value="TIDAK ADA" /> TIDAK ADA</label>
+    </fieldset>
+
+    <fieldset>
+      <legend>Penerangan:</legend>
+      <label><input type="radio" name="penerangan" value="Tower lamp" /> Tower lamp</label>
+      <label><input type="radio" name="penerangan" value="Mega Tower" /> Mega Tower</label>
+    </fieldset>
+
+    <label for="unitDrilling">Unit Drilling:</label>
+    <input type="text" id="unitDrilling" placeholder="Masukkan Unit Drilling..." />
+
+    <button type="button" class="time-btn" id="btnBor">Mulai Bor</button>
+    <span id="timeBor" class="time-display">[BELUM MULAI]</span>
+
+    <label for="remarkBor" style="margin-top: 15px;">Remark:</label>
+    <textarea id="remarkBor" rows="3" placeholder="Isi jika perlu..."></textarea>
+
+    <button type="submit" style="margin-top:20px;">Submit Bor</button>
+  </section>
+
+</form>
+
+<h2 style="text-align:center; color:#34495e;">Output Rekapan:</h2>
+<div id="output"></div>
 
 <script>
-  function showSection(id) {
-    document.querySelectorAll('section').forEach(sec => sec.style.display = 'none');
-    document.getElementById(id).style.display = 'block';
-  }
+  // Navigasi menu
+  const sections = {
+    free: document.getElementById('sectionFree'),
+    prepare: document.getElementById('sectionPrepare'),
+    bor: document.getElementById('sectionBor')
+  };
+  const navButtons = {
+    free: document.getElementById('navFree'),
+    prepare: document.getElementById('navPrepare'),
+    bor: document.getElementById('navBor')
+  };
 
-  function setTime(id) {
-    const now = new Date().toLocaleTimeString('id-ID', { hour12: false });
-    document.getElementById(id).textContent = now;
-  }
-
-  function generateOutput(type) {
-    let output = '';
-    if (type === 'kondisi') {
-      const lokasi = document.getElementById('lokasiKondisi').value || '[Belum Diisi]';
-      const waktu = document.getElementById('timeFree').textContent || '[Belum Mulai]';
-      const remark = document.getElementById('remarkKondisi').value || '-';
-      output =
-`1. KONDISI LOKASI
-Nama Lokasi       : ${lokasi}
-Waktu MULAI FREE  : ${waktu}
-Remark            : ${remark}`;
-      document.getElementById('outputKondisi').textContent = output;
+  function showSection(name) {
+    for (const key in sections) {
+      if (key === name) {
+        sections[key].classList.add('active');
+        navButtons[key].classList.add('active');
+      } else {
+        sections[key].classList.remove('active');
+        navButtons[key].classList.remove('active');
+      }
     }
-    if (type === 'prepare') {
-      const lokasi = document.getElementById('lokasiPrepare').value || '[Belum Diisi]';
-      const waktu = document.getElementById('timePrepare').textContent || '[Belum Mulai]';
+    document.getElementById('output').textContent = '';
+  }
+
+  navButtons.free.onclick = () => showSection('free');
+  navButtons.prepare.onclick = () => showSection('prepare');
+  navButtons.bor.onclick = () => showSection('bor');
+
+  // Time button and display handlers
+  function startTime(buttonId, timeId) {
+    const btn = document.getElementById(buttonId);
+    const timeSpan = document.getElementById(timeId);
+    btn.onclick = () => {
+      const now = new Date();
+      const formatted = now.toLocaleTimeString('id-ID', {hour12:false});
+      timeSpan.textContent = formatted;
+    };
+  }
+
+  startTime('btnFree', 'timeFree');
+  startTime('btnPrepare', 'timePrepare');
+  startTime('btnBor', 'timeBor');
+
+  // Clipboard copy helper
+  function copyToClipboard(text) {
+    navigator.clipboard.writeText(text).then(() => {
+      alert('Output berhasil disalin ke clipboard!');
+    }, () => {
+      alert('Gagal menyalin ke clipboard, silakan salin manual.');
+    });
+  }
+
+  // Form submit handler
+  document.getElementById('drillForm').onsubmit = function(event) {
+    event.preventDefault();
+    const activeSection = Object.keys(sections).find(key => sections[key].classList.contains('active'));
+
+    let outputText = '';
+    const nowDate = new Date().toLocaleDateString('id-ID');
+
+    if (activeSection === 'free') {
+      const pit = document.getElementById('pitFree').value || '-';
+      const lokasi = document.getElementById('lokasiFree').value || '-';
+      const waktu = document.getElementById('timeFree').textContent;
+      const remark = document.getElementById('remarkFree').value || '-';
+
+      outputText += `MULAI FREE\nTanggal: ${nowDate}\nPit: ${pit}\nLokasi: ${lokasi}\nWaktu: ${waktu}\nRemark: ${remark}`;
+    }
+    else if (activeSection === 'prepare') {
+      const pit = document.getElementById('pitPrepare').value || '-';
+      const lokasi = document.getElementById('lokasiPrepare').value || '-';
+      const waktu = document.getElementById('timePrepare').textContent;
       const remark = document.getElementById('remarkPrepare').value || '-';
-      output =
-`2. PREPARE LOKASI
-Nama Lokasi          : ${lokasi}
-Waktu MULAI PREPARE  : ${waktu}
-Remark               : ${remark}`;
-      document.getElementById('outputPrepare').textContent = output;
+
+      outputText += `MULAI PREPARE\nTanggal: ${nowDate}\nPit: ${pit}\nLokasi: ${lokasi}\nWaktu: ${waktu}\nRemark: ${remark}`;
     }
-    if (type === 'bor') {
-      const lokasi = document.getElementById('lokasiBor').value || '[Belum Diisi]';
-      const waktu = document.getElementById('timeBor').textContent || '[Belum Mulai]';
+    else if (activeSection === 'bor') {
+      const pit = document.getElementById('pitBor').value || '-';
+      const lokasi = document.getElementById('lokasiBor').value || '-';
+      const shift = document.getElementById('shiftBor').value || '-';
+
+      function getRadioValue(name) {
+        const radios = document.getElementsByName(name);
+        for (const r of radios) {
+          if (r.checked) return r.value;
+        }
+        return '-';
+      }
+
+      const tanggulLokasi = getRadioValue('tanggulLokasi');
+      const safetyLine = getRadioValue('safetyLine');
+      const areaParkir = getRadioValue('areaParkir');
+      const rambuLokasi = getRadioValue('rambuLokasi');
+      const rambuParkir = getRadioValue('rambuParkir');
+      const jalanMasuk = getRadioValue('jalanMasuk');
+      const penerangan = getRadioValue('penerangan');
+      const unitDrilling = document.getElementById('unitDrilling').value || '-';
+      const waktu = document.getElementById('timeBor').textContent;
       const remark = document.getElementById('remarkBor').value || '-';
-      output =
-`3. PROSES BOR
-Nama Lokasi       : ${lokasi}
-Waktu MULAI BOR   : ${waktu}
-Remark            : ${remark}`;
-      document.getElementById('outputBor').textContent = output;
+
+      outputText += `MULAI BOR\nTanggal: ${nowDate}\nPit: ${pit}\nLokasi: ${lokasi}\nShift: ${shift}\nWaktu: ${waktu}\n`;
+      outputText += `♦ Tanggul lokasi: ${tanggulLokasi}\n♦ Safety line: ${safetyLine}\n♦ Area parkir: ${areaParkir}\n`;
+      outputText += `♦ Rambu lokasi: ${rambuLokasi}\n♦ Rambu parkir: ${rambuParkir}\n♦ Jalan masuk: ${jalanMasuk}\n`;
+      outputText += `♦ Penerangan: ${penerangan}\n♦ Unit Drilling: ${unitDrilling}\nRemark: ${remark}`;
     }
 
-    navigator.clipboard.writeText(output)
-      .then(() => alert("Output berhasil disalin ke clipboard!"))
-      .catch(err => alert("Gagal menyalin: " + err));
-  }
+    const outputDiv = document.getElementById('output');
+    outputDiv.textContent = outputText;
+
+    // Copy to clipboard
+    copyToClipboard(outputText);
+
+    // Optional: reset form or inputs? (Not requested)
+  };
 </script>
 
 </body>
